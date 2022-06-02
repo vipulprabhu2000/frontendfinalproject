@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { HistoricalChart } from "../config/api";
 import { Line } from "react-chartjs-2";
+
 import {
   CircularProgress,
   createTheme,
@@ -12,11 +13,11 @@ import SelectButton from "./SelectButton";
 import { chartDays } from "../config/data";
 import { CryptoState } from "../CryptoContext";
 
-const CoinInfo = ({coin}) => {
+const CoinInfo = ({ coin }) => {
   const [historicData, setHistoricData] = useState();
   const [days, setDays] = useState(1);
   const { currency } = CryptoState();
-  const [flag,setflag] = useState(false);
+  const [flag, setflag] = useState(false);
 
   const useStyles = makeStyles((theme) => ({
     container: {
@@ -59,12 +60,36 @@ const CoinInfo = ({coin}) => {
       type: "dark",
     },
   });
+  
+  
+  const api1=axios.create({
+    baseURL:'http://127.0.0.1:8000/SentimentAnalyzer/'
+  }) 
+  const createcourse=async()=>{
+    try {
+      let coin_data=await api1.post('/',{h:coin.id})
+      console.log(coin_data.data)
+     /*   Positive=coin_data.data.Positive
+       Negative=coin_data.data.Negative
+      Neutral=coin_data.data.Neutral
+       Subjectivity=coin_data.data.Subjectivity */
+       document.getElementById("pos").innerHTML=coin_data.data.Positive
+       document.getElementById("negtve").innerHTML=coin_data.data.Negative
+       document.getElementById("neut").innerHTML=coin_data.data.Neutral
+       document.getElementById("Subjtv").innerHTML=coin_data.data.Subjectivity
+       /* console.log(coin_data.data.Negative)  */
+      /* setcoin(coin_data.data) */
+    } catch (error) {
+      console.log(error)
+    }
+   }
+
 
 
   return (
     <ThemeProvider theme={darkTheme}>
       <div className={classes.container}>
-        {!historicData | flag===false ? (
+        {!historicData | (flag === false) ? (
           <CircularProgress
             style={{ color: "gold" }}
             size={250}
@@ -107,23 +132,30 @@ const CoinInfo = ({coin}) => {
                 width: "100%",
               }}
             >
-              {chartDays.map((day) => (
-                <SelectButton
-                  key={day.value}
-                  onClick={() => {setDays(day.value);
-                    setflag(false);
-                  }}
-                  selected={day.value === days}
-                >
-                  {day.label}
-                </SelectButton>
-              ))}
+              
+
+
+              <SelectButton onClick={() => createcourse()}>Sentiments</SelectButton>
+              <SelectButton>hi</SelectButton>
+              <SelectButton>hi</SelectButton>
+              <SelectButton>hi</SelectButton>
             </div>
+            
           </>
         )}
+        <div class="sentiment" style={{display:"flex",flexDirection:"column",margin:20 ,justifyContent:"space-evenly", width:450,position:"relative",right:390}}>
+              <h3>
+              Positive: <span id="pos"></span></h3>
+              <h3>
+             Negative: <span id="negtve"></span></h3>
+              <h3>
+              Neutral: <span id="neut"></span></h3>
+              <h3>
+              Subjectivity: <span id="Subjtv"></span></h3>
+            </div>
       </div>
     </ThemeProvider>
-  )
-}
+  );
+};
 
-export default CoinInfo
+export default CoinInfo;
