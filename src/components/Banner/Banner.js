@@ -1,6 +1,7 @@
 import React from 'react'
 import { Container, makeStyles, Typography } from "@material-ui/core";
 import Carousel from "./Carousel";
+import cryptosy from './img/Cryotosy1.png'
 
 const useStyles = makeStyles((theme) => ({
     banner: {
@@ -10,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
       height: 400,
       display: "flex",
       flexDirection: "column",
-      paddingTop: 25,
+      paddingTop: 10,
       justifyContent: "space-around",
     },
     tagline: {
@@ -25,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
       display: "flex",
       alignItems: "center",
     },
+    
   }));
 
 const Banner = () => {
@@ -34,7 +36,7 @@ const Banner = () => {
     <div className={classes.banner}>
     <Container className={classes.bannerContent}>
       <div className={classes.tagline}>
-        <Typography
+        {/* <Typography
           variant="h2"
           style={{
             fontWeight: "bold",
@@ -43,8 +45,16 @@ const Banner = () => {
           }}
         >
           Cryptosy
-        </Typography>
-        <Typography
+        </Typography> */}
+        <img src={cryptosy} alt='Cryotosy' style={{
+          width:"350px",
+          margin:"auto",
+          borderBottom: "1px solid white"
+          
+        }} />
+        {/* <hr/> */}
+
+        {/* <Typography
           variant="subtitle2"
           style={{
             color: "darkgrey",
@@ -53,7 +63,7 @@ const Banner = () => {
           }}
         >
           Get all the Info regarding your favorite Crypto Currency
-        </Typography>
+        </Typography> */}
       </div>
       <Carousel />
     </Container>

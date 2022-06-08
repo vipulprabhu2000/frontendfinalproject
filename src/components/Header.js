@@ -22,7 +22,7 @@ import { useNavigate } from 'react-router-dom';
 const useStyles = makeStyles((theme) => ({
   title: {
     flex: 1,
-      color: "gold",
+    color: "Gold",
       fontFamily: "Montserrat",
       fontWeight: "bold",
       cursor: "pointer",

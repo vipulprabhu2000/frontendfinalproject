@@ -50,7 +50,16 @@ const CoinsTable = () => {
             color: "gold",
           },
         },
+
       });
+
+  const goldStyle = {
+    backgroundColor: "Gold", 
+    backgroundImage: 'linear-gradient(180deg, Gold, #7C4000)',
+    opacity: "0.8",
+    color: "white"
+    //background: 'radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%)'
+  }
 
       const darkTheme = createTheme({
         palette: {
@@ -97,24 +106,25 @@ const CoinsTable = () => {
         >
           Cryptocurrency Prices by Market Cap
         </Typography>
-        <TextField
+        {/* <TextField
           label="Search For a Crypto Currency.."
           variant="outlined"
           style={{ marginBottom: 20, width: "100%" }}
           onChange={(e) => setSearch(e.target.value)}
-        />
+        /> */}
         <TableContainer component={Paper}>
           {loading ? (
             <LinearProgress style={{ backgroundColor: "gold" }} />
           ) : (
             <Table aria-label="simple table">
-              <TableHead style={{ backgroundColor: "#EEBC1D" }}>
+              
+                <TableHead style={goldStyle}>
                 <TableRow>
                   {["Coin", "Price", "24h Change", "Market Cap"].map((head) => (
                     <TableCell
                       style={{
-                        color: "black",
-                        fontWeight: "700",
+                        color: "white",
+                        fontWeight: "800",
                         fontFamily: "Montserrat",
                       }}
                       key={head}
@@ -197,7 +207,7 @@ const CoinsTable = () => {
         </TableContainer>
 
         {/* Comes from @material-ui/lab */}
-        <Pagination
+        {/* <Pagination
           count={(handleSearch()?.length / 10).toFixed(0)}
           style={{
             padding: 20,
@@ -210,7 +220,7 @@ const CoinsTable = () => {
             setPage(value);
             window.scroll(0, 450);
           }}
-        />
+        /> */}
       </Container>
     </ThemeProvider>
   )
