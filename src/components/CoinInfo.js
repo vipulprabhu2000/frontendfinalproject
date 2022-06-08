@@ -4,6 +4,34 @@ import { HistoricalChart } from "../config/api";
 import { Line } from "react-chartjs-2";
 
 import {
+  Chart,
+  ArcElement,
+  LineElement,
+  BarElement,
+  PointElement,
+  BarController,
+  BubbleController,
+  DoughnutController,
+  LineController,
+  PieController,
+  PolarAreaController,
+  RadarController,
+  ScatterController,
+  CategoryScale,
+  LinearScale,
+  LogarithmicScale,
+  RadialLinearScale,
+  TimeScale,
+  TimeSeriesScale,
+  Decimation,
+  Filler,
+  Legend,
+  Title,
+  Tooltip,
+  SubTitle,
+} from "chart.js";
+
+import {
   CircularProgress,
   createTheme,
   makeStyles,
@@ -60,32 +88,51 @@ const CoinInfo = ({ coin }) => {
       type: "dark",
     },
   });
-  
-  
-  const api1=axios.create({
-    baseURL:'http://127.0.0.1:8000/SentimentAnalyzer/'
-  }) 
-  const createcourse=async()=>{
+
+  const api1 = axios.create({
+    baseURL: "http://127.0.0.1:8000/SentimentAnalyzer/",
+  });
+  const createcourse = async () => {
     try {
-      let coin_data=await api1.post('/',{h:coin.id})
-      console.log(coin_data.data)
-     /*   Positive=coin_data.data.Positive
+      let coin_data = await api1.post("/", { h: coin.id });
+      console.log(coin_data.data);
+      /*   Positive=coin_data.data.Positive
        Negative=coin_data.data.Negative
       Neutral=coin_data.data.Neutral
        Subjectivity=coin_data.data.Subjectivity */
-       document.getElementById("pos").innerHTML=coin_data.data.Positive
-       document.getElementById("negtve").innerHTML=coin_data.data.Negative
-       document.getElementById("neut").innerHTML=coin_data.data.Neutral
-       document.getElementById("Subjtv").innerHTML=coin_data.data.Subjectivity
-       /* console.log(coin_data.data.Negative)  */
+      document.getElementById("pos").innerHTML = coin_data.data.Positive;
+      document.getElementById("negtve").innerHTML = coin_data.data.Negative;
+      document.getElementById("neut").innerHTML = coin_data.data.Neutral;
+      document.getElementById("Subjtv").innerHTML = coin_data.data.Subjectivity;
+      /* console.log(coin_data.data.Negative)  */
       /* setcoin(coin_data.data) */
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-   }
+  };
+  const labels = ["January", "February", "March", "April", "May", "June"];
+
+  const data = {
+    labels: labels,
+    datasets: [
+      {
+        label: "My First dataset",
+        backgroundColor: "rgb(255, 99, 132)",
+        borderColor: "rgb(255, 99, 132)",
+        data: [0, 10, 5, 2, 20, 30, 45],
+      },
+    ],
+  };
+
+  const config = {
+    type: "line",
+    data: data,
+    options: {},
+  };
 
 
-
+  const myChart = new Chart(document.getElementById("myChart"), config);
+  myChart.destroy();
   return (
     <ThemeProvider theme={darkTheme}>
       <div className={classes.container}>
@@ -132,27 +179,50 @@ const CoinInfo = ({ coin }) => {
                 width: "100%",
               }}
             >
-              
-
-
-              <SelectButton onClick={() => createcourse()}>Sentiments</SelectButton>
+              <SelectButton
+                onClick={() => {
+                  createcourse();
+                  myChart();
+                }}
+              >
+                Sentiments
+              </SelectButton>
               <SelectButton>hi</SelectButton>
               <SelectButton>hi</SelectButton>
               <SelectButton>hi</SelectButton>
             </div>
-            
           </>
         )}
-        <div class="sentiment" style={{display:"flex",flexDirection:"column",margin:20 ,justifyContent:"space-evenly", width:450,position:"relative",right:390}}>
-              <h3>
-              Positive: <span id="pos"></span></h3>
-              <h3>
-             Negative: <span id="negtve"></span></h3>
-              <h3>
-              Neutral: <span id="neut"></span></h3>
-              <h3>
-              Subjectivity: <span id="Subjtv"></span></h3>
-            </div>
+        <div
+          class="sentiment"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            margin: 20,
+            justifyContent: "space-evenly",
+            width: 450,
+            position: "relative",
+            right: 390,
+          }}
+        >
+          <h3>
+            Positive: <span id="pos"></span>
+          </h3>
+          <h3>
+            Negative: <span id="negtve"></span>
+          </h3>
+          <h3>
+            Neutral: <span id="neut"></span>
+          </h3>
+          <h3>
+            Subjectivity: <span id="Subjtv"></span>
+          </h3>
+          
+        </div>
+
+        <div>
+            <canvas id="myChart" width="500" height="500"></canvas>
+          </div>
       </div>
     </ThemeProvider>
   );
