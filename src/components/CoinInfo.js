@@ -2,36 +2,11 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { HistoricalChart } from "../config/api";
 import { Line } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { Doughnut } from "react-chartjs-2";
 
 import {
-  Chart,
-  ArcElement,
-  LineElement,
-  BarElement,
-  PointElement,
-  BarController,
-  BubbleController,
-  DoughnutController,
-  LineController,
-  PieController,
-  PolarAreaController,
-  RadarController,
-  ScatterController,
-  CategoryScale,
-  LinearScale,
-  LogarithmicScale,
-  RadialLinearScale,
-  TimeScale,
-  TimeSeriesScale,
-  Decimation,
-  Filler,
-  Legend,
-  Title,
-  Tooltip,
-  SubTitle,
-} from "chart.js";
-
-import {
+  Box,
   CircularProgress,
   createTheme,
   makeStyles,
@@ -41,11 +16,13 @@ import SelectButton from "./SelectButton";
 import { chartDays } from "../config/data";
 import { CryptoState } from "../CryptoContext";
 
+ChartJS.register(ArcElement, Tooltip, Legend);
 const CoinInfo = ({ coin }) => {
   const [historicData, setHistoricData] = useState();
   const [days, setDays] = useState(1);
   const { currency } = CryptoState();
   const [flag, setflag] = useState(false);
+  const [coins, setCoins] = useState([]);
 
   const useStyles = makeStyles((theme) => ({
     container: {
@@ -73,8 +50,6 @@ const CoinInfo = ({ coin }) => {
     setHistoricData(data.prices);
   };
 
-  // console.log(coin);
-
   useEffect(() => {
     fetchHistoricData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -88,51 +63,46 @@ const CoinInfo = ({ coin }) => {
       type: "dark",
     },
   });
-
   const api1 = axios.create({
     baseURL: "http://127.0.0.1:8000/SentimentAnalyzer/",
   });
+
   const createcourse = async () => {
     try {
       let coin_data = await api1.post("/", { h: coin.id });
-      console.log(coin_data.data);
-      /*   Positive=coin_data.data.Positive
-       Negative=coin_data.data.Negative
-      Neutral=coin_data.data.Neutral
-       Subjectivity=coin_data.data.Subjectivity */
-      document.getElementById("pos").innerHTML = coin_data.data.Positive;
-      document.getElementById("negtve").innerHTML = coin_data.data.Negative;
-      document.getElementById("neut").innerHTML = coin_data.data.Neutral;
-      document.getElementById("Subjtv").innerHTML = coin_data.data.Subjectivity;
-      /* console.log(coin_data.data.Negative)  */
-      /* setcoin(coin_data.data) */
+
+      setCoins([
+        coin_data.data.Positive,
+        coin_data.data.Negative,
+        coin_data.data.Neutral,
+        coin_data.data.Subjectivity,
+      ]);
     } catch (error) {
       console.log(error);
     }
   };
-  const labels = ["January", "February", "March", "April", "May", "June"];
 
-  const data = {
-    labels: labels,
+  var data = {
+    labels: ["Positive", "Negative", "Neutral"],
     datasets: [
       {
-        label: "My First dataset",
-        backgroundColor: "rgb(255, 99, 132)",
-        borderColor: "rgb(255, 99, 132)",
-        data: [0, 10, 5, 2, 20, 30, 45],
+        label: "# of Votes",
+        data: [coins[0], coins[1], coins[2]],
+        backgroundColor: [
+          "rgba(255, 99, 132, 0.2)",
+          "rgba(54, 162, 235, 0.2)",
+          "rgba(255, 206, 86, 0.2)",
+        ],
+        borderColor: [
+          "rgba(255, 99, 132, 1)",
+          "rgba(54, 162, 235, 1)",
+          "rgba(255, 206, 86, 1)",
+        ],
+        borderWidth: 1,
       },
     ],
   };
 
-  const config = {
-    type: "line",
-    data: data,
-    options: {},
-  };
-
-
-  const myChart = new Chart(document.getElementById("myChart"), config);
-  myChart.destroy();
   return (
     <ThemeProvider theme={darkTheme}>
       <div className={classes.container}>
@@ -179,17 +149,7 @@ const CoinInfo = ({ coin }) => {
                 width: "100%",
               }}
             >
-              <SelectButton
-                onClick={() => {
-                  createcourse();
-                  myChart();
-                }}
-              >
-                Sentiments
-              </SelectButton>
-              <SelectButton>hi</SelectButton>
-              <SelectButton>hi</SelectButton>
-              <SelectButton>hi</SelectButton>
+              <SelectButton onClick={createcourse}>Sentiments</SelectButton>
             </div>
           </>
         )}
@@ -205,24 +165,15 @@ const CoinInfo = ({ coin }) => {
             right: 390,
           }}
         >
-          <h3>
-            Positive: <span id="pos"></span>
-          </h3>
-          <h3>
-            Negative: <span id="negtve"></span>
-          </h3>
-          <h3>
-            Neutral: <span id="neut"></span>
-          </h3>
-          <h3>
-            Subjectivity: <span id="Subjtv"></span>
-          </h3>
-          
+          <h3>Positive:{coins[0]}</h3>
+          <h3>Negative: {coins[1]}</h3>
+          <h3>Neutral: {coins[2]}</h3>
+          <h3>Subjectivity: {coins[3]}</h3>
         </div>
 
-        <div>
-            <canvas id="myChart" width="500" height="500"></canvas>
-          </div>
+        <Box component="div" m={1} style={{ width: "700", height: "700" }}>
+          <Doughnut data={data} />
+        </Box>
       </div>
     </ThemeProvider>
   );
