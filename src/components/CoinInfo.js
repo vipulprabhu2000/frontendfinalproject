@@ -2,52 +2,19 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { HistoricalChart } from "../config/api";
 import { Line } from "react-chartjs-2";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend,LinearScale,LineElement,PointElement,CategoryScale} from "chart.js";
-import { Doughnut } from "react-chartjs-2";
-/* import faker from 'faker'; */
-/* ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
+
+import {
+  Chart as ChartJS,
+  ArcElement,
   Tooltip,
-  Legend
-);
-
-export const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'top' ,
-    },
-    title: {
-      display: true,
-      text: 'Chart.js Line Chart',
-    },
-  },
-};
-
-const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: 'Dataset 1',
-      data: labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
-      borderColor: 'rgb(255, 99, 132)',
-      backgroundColor: 'rgba(255, 99, 132, 0.5)',
-    },
-    {
-      label: 'Dataset 2',
-      data: labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
-      borderColor: 'rgb(53, 162, 235)',
-      backgroundColor: 'rgba(53, 162, 235, 0.5)',
-    },
-  ],
-}; */
-
+  Legend,
+  LinearScale,
+  LineElement,
+  PointElement,
+  CategoryScale,
+  title,
+} from "chart.js";
+import { Doughnut } from "react-chartjs-2";
 
 import {
   Box,
@@ -60,14 +27,38 @@ import SelectButton from "./SelectButton";
 import { chartDays } from "../config/data";
 import { CryptoState } from "../CryptoContext";
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement
+);
+
 const CoinInfo = ({ coin }) => {
   const [historicData, setHistoricData] = useState();
   const [days, setDays] = useState(1);
   const { currency } = CryptoState();
   const [flag, setflag] = useState(false);
   const [coins, setCoins] = useState([]);
-  const[dataml,setdataml]=useState([]);
+  const [dataml, setdataml] = useState([]);
+ 
+const x=[];
+const y=[];
+  /*   const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top' ,
+      },
+      title: {
+        display: true,
+        text: 'Chart.js Line Chart',
+      },
+    },
+  }; */
 
   const useStyles = makeStyles((theme) => ({
     container: {
@@ -131,9 +122,19 @@ const CoinInfo = ({ coin }) => {
   };
   const createcourse1 = async () => {
     try {
-      let coin_state = await api2.post("/", {});
-      
-        console.log("Works");
+      let coin_state = await api2.post("/", { h: coin.id });
+
+     /*  console.log(coin_state.data.magnitude); */
+
+
+      for (let i = 0; i < 50; i++) {
+        let j=parseInt(i);
+        let m=parseFloat(coin_state.data[i].magnitude);
+        y.push(j);
+        x.push(m);
+        m=0;
+      }
+   
     } catch (error) {
       console.log(error);
     }
@@ -159,6 +160,46 @@ const CoinInfo = ({ coin }) => {
       },
     ],
   };
+/*   const config = {
+    type: "line",
+    data: x,
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: "top",
+        },
+        title: {
+          display: true,
+          text: "Chart.js Line Chart",
+        },
+      },
+    },
+  }; */
+ const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Chart.js Line Chart',
+      },
+    },
+  };
+  const labels= y;
+  const final_data = {
+    labels,
+    datasets: [
+      {
+        label: "Momentum",
+        data: x,
+        borderColor: "rgb(255, 255, 255)",
+        backgroundColor: "rgba(255, 255,255,0.5)",
+      },
+    ],
+  };
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -171,33 +212,12 @@ const CoinInfo = ({ coin }) => {
           />
         ) : (
           <>
-            {/* <Line
-              data={{
-                labels: historicData.map((coin) => {
-                  let date = new Date(coin[0]);
-                  let time =
-                    date.getHours() > 12
-                      ? `${date.getHours() - 12}:${date.getMinutes()} PM`
-                      : `${date.getHours()}:${date.getMinutes()} AM`;
-                  return days === 1 ? time : date.toLocaleDateString();
-                }),
-
-                datasets: [
-                  {
-                    data: historicData.map((coin) => coin[1]),
-                    label: `Price ( Past ${days} Days ) in ${currency}`,
-                    borderColor: "#EEBC1D",
-                  },
-                ],
-              }}
-              options={{
-                elements: {
-                  point: {
-                    radius: 1,
-                  },
-                },
-              }}
-            /> */}
+          {/* <Box component="div" m={1} style={{ width: "700 ", height: "700" }}>
+                <Line options={options} data={final_data} />
+             </Box> */}
+            <div style={{width:"50%",height:"45%"}}>
+            <Line options={options} data={final_data} />
+            </div>
             <div
               style={{
                 display: "flex",
@@ -206,9 +226,9 @@ const CoinInfo = ({ coin }) => {
                 width: "100%",
               }}
             >
+            
               <SelectButton onClick={createcourse}>Sentiments</SelectButton>
               <SelectButton onClick={createcourse1}>technical</SelectButton>
-
             </div>
           </>
         )}
@@ -229,13 +249,36 @@ const CoinInfo = ({ coin }) => {
           <h3>Neutral: {coins[2]}</h3>
           <h3>Subjectivity: {coins[3]}</h3>
         </div>
-
-        <Box component="div" m={1} style={{ width: "700", height: "700" }}>
+      
+        <Box component="div" m={1} style={{ width: "80%", height: "700" }}>
           <Doughnut data={data} />
         </Box>
       </div>
     </ThemeProvider>
   );
 };
+
+{
+  /* <Line
+data={{
+  labels:[0, 10 , 20 ,30 , 40, 50],
+
+  datasets: [
+    {
+      data: setdataml.map((coin) => coin),
+      label: `Momentum`,
+      borderColor: "#EEBC1D",
+    },
+  ],
+}}
+options={{
+  elements: {
+    point: {
+      radius: 1,
+    },
+  },
+}}
+/> */
+}
 
 export default CoinInfo;
