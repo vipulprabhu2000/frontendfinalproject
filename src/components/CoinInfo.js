@@ -157,9 +157,13 @@ const y=[];
           "rgba(255, 206, 86, 1)",
         ],
         borderWidth: 1,
+        
       },
     ],
   };
+  useEffect(() => {
+    createcourse1()
+  }, );
 /*   const config = {
     type: "line",
     data: x,
@@ -215,7 +219,8 @@ const y=[];
           {/* <Box component="div" m={1} style={{ width: "700 ", height: "700" }}>
                 <Line options={options} data={final_data} />
              </Box> */}
-            <div style={{width:"50%",height:"45%"}}>
+            
+            <div style={{width:"60%",height:"45%"}} >
             <Line options={options} data={final_data} />
             </div>
             <div
@@ -228,7 +233,7 @@ const y=[];
             >
             
               <SelectButton onClick={createcourse}>Sentiments</SelectButton>
-              <SelectButton onClick={createcourse1}>technical</SelectButton>
+             {/*  <SelectButton >technical</SelectButton> */}
             </div>
           </>
         )}
@@ -250,8 +255,11 @@ const y=[];
           <h3>Subjectivity: {coins[3]}</h3>
         </div>
       
-        <Box component="div" m={1} style={{ width: "80%", height: "700" }}>
-          <Doughnut data={data} />
+        <Box component="div" m={1} >
+          <Doughnut data={data}  width={400} height={200} innerRadius={0.5}options={{
+          responsive: true,
+          maintainAspectRatio: true,
+        }}/>
         </Box>
       </div>
     </ThemeProvider>
