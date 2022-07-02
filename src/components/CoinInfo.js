@@ -138,7 +138,7 @@ const y=[];
     } catch (error) {
       console.log(error);
     }
-  };
+  }
 
   var data = {
     labels: ["Positive", "Negative", "Neutral"],
@@ -147,9 +147,9 @@ const y=[];
         label: "# of Votes",
         data: [coins[0], coins[1], coins[2]],
         backgroundColor: [
-          "rgba(255, 99, 132, 0.2)",
-          "rgba(54, 162, 235, 0.2)",
-          "rgba(255, 206, 86, 0.2)",
+          "rgba(255, 99, 132)",
+          "rgba(54, 162, 235)",
+          "rgba(255, 206, 86)",
         ],
         borderColor: [
           "rgba(255, 99, 132, 1)",
@@ -161,9 +161,11 @@ const y=[];
       },
     ],
   };
-  useEffect(() => {
+ /*  useEffect(() => {
     createcourse1()
-  }, );
+    createcourse()
+    
+  }, ); */
 /*   const config = {
     type: "line",
     data: x,
@@ -233,7 +235,7 @@ const y=[];
             >
             
               <SelectButton onClick={createcourse}>Sentiments</SelectButton>
-             {/*  <SelectButton >technical</SelectButton> */}
+              <SelectButton onClick={createcourse1} >Technical</SelectButton>
             </div>
           </>
         )}
