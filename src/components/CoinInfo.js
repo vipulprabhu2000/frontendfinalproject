@@ -44,10 +44,13 @@ const CoinInfo = ({ coin }) => {
   const [flag, setflag] = useState(false);
   const [coins, setCoins] = useState([]);
   const [dataml, setdataml] = useState([]);
+  const [loading, setLoading] = useState(false);
+
  
 const x=[];
 const y=[];
-  /*   const options = {
+
+/*   const options = {
     responsive: true,
     plugins: {
       legend: {
@@ -75,6 +78,16 @@ const y=[];
         padding: 20,
         paddingTop: 0,
       },
+    },
+    small_container:{
+      width:"auto",
+      padding:"10px",
+      margin:"15px",
+    },
+    min_container:{
+      display:"block",
+      width:"auto",
+      margin:"auto"
     },
   }));
 
@@ -161,11 +174,11 @@ const y=[];
       },
     ],
   };
- /*  useEffect(() => {
+  useEffect(() => {
     createcourse1()
-    createcourse()
     
-  }, ); */
+    
+  },);
 /*   const config = {
     type: "line",
     data: x,
@@ -222,7 +235,7 @@ const y=[];
                 <Line options={options} data={final_data} />
              </Box> */}
             
-            <div style={{width:"60%",height:"45%"}} >
+            <div style={{width:"60%",height:"auto"}} >
             <Line options={options} data={final_data} />
             </div>
             <div
@@ -234,12 +247,12 @@ const y=[];
               }}
             >
             
-              <SelectButton onClick={createcourse}>Sentiments</SelectButton>
-              <SelectButton onClick={createcourse1} >Technical</SelectButton>
+              <SelectButton className={classes.min_container} onClick={createcourse}>Sentiments</SelectButton>
+             {/*  <SelectButton onClick={createcourse1} >Technical</SelectButton> */}
             </div>
           </>
         )}
-        <div
+       {/*  <div
           class="sentiment"
           style={{
             display: "flex",
@@ -250,15 +263,32 @@ const y=[];
             position: "relative",
             right: 390,
           }}
-        >
-          <h3>Positive:{coins[0]}</h3>
+        > */}
+        <div className="sent_class" style={{display:"flex",flexDirection:"row",justifyContent:"space-evenly" ,width:"auto"}}>
+        <div className={classes.small_container}>
+        Positive:{coins[0]}
+        </div>
+        <div className={classes.small_container}>
+        Negative: {coins[1]}
+        </div>
+        <div className={classes.small_container}>
+        Neutral: {coins[2]}
+        </div>
+        <div className={classes.small_container}>
+        Subjectivity: {coins[3]}
+        </div>
+        
+      
+        </div>
+        
+          {/* <h3>Positive:</h3>
           <h3>Negative: {coins[1]}</h3>
           <h3>Neutral: {coins[2]}</h3>
-          <h3>Subjectivity: {coins[3]}</h3>
-        </div>
+          <h3>Subjectivity: {coins[3]}</h3> */}
+        
       
         <Box component="div" m={1} >
-          <Doughnut data={data}  width={400} height={200} innerRadius={0.5}options={{
+          <Doughnut data={data}  width={400} height={200} options={{
           responsive: true,
           maintainAspectRatio: true,
         }}/>
